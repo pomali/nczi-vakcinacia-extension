@@ -40,9 +40,13 @@ function saveForm(e) {
 
     const existing = multiFormArr.findIndex(
       (x) =>
-        x[1].value === formArr[1].value &&
-        x[2].value === formArr[2].value &&
-        x[3].value === formArr[3].value
+        getValueByNgModel(x, "form_data.first_name") ===
+          getValueByNgModel(formArr, "form_data.first_name") &&
+        getValueByNgModel(x, "form_data.last_name") ===
+          getValueByNgModel(formArr, "form_data.last_name") &&
+        getValueByNgModel(x, "form_data.birth_number") ===
+          getValueByNgModel(formArr, "form_data.birth_number")
+      // TODO this fails for ppl without RC/BN/BIC
     );
     console.log(multiFormArr);
     console.log(formArr);
@@ -64,8 +68,10 @@ function isSavedMatchingInput(otherInput) {
   return (thisSavedInput) =>
     (thisSavedInput["type"] == "radio" &&
       otherInput.type == "radio" &&
-      thisSavedInput["value"] == otherInput.value) ||
-    thisSavedInput["ng-model"] == otherInput.getAttribute("ng-model");
+      thisSavedInput["value"] == otherInput.value &&
+      thisSavedInput["ng-model"] == otherInput.getAttribute("ng-model")) ||
+    (otherInput["type"] != "radio" &&
+      thisSavedInput["ng-model"] == otherInput.getAttribute("ng-model"));
 }
 
 function addSaveButton() {
@@ -87,6 +93,9 @@ function fnFillForm(formArray) {
       const changeEvent = new InputEvent("change");
       const blurEvent = new FocusEvent("blur");
       const savedInput = formArray.find(isSavedMatchingInput(input));
+      if (input.type == "radio") {
+        debugger;
+      }
       if (savedInput !== undefined) {
         if (input.type == "checkbox" || input.type == "radio") {
           input.checked = savedInput.checked;
@@ -145,7 +154,13 @@ function addLoadButtons() {
         const btn = document.createElement("button");
         btn.className = "btn pom-nve-btn-primary";
         btn.style.margin = "0.3em";
-        btn.textContent = `${f[1].value} ${f[2].value} (${f[3].value})`;
+        btn.textContent = `${getValueByNgModel(
+          f,
+          "form_data.first_name"
+        )} ${getValueByNgModel(f, "form_data.last_name")} (${getValueByNgModel(
+          f,
+          "form_data.birth_number"
+        )})`;
         btn.addEventListener("click", fnFillForm(f));
         elFillInInner.append(btn);
       }
