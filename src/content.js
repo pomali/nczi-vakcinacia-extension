@@ -55,6 +55,14 @@ function saveForm(e) {
   });
 }
 
+function isSavedMatchingInput(otherInput) {
+  return (thisSavedInput) =>
+    (thisSavedInput["type"] == "radio" &&
+      otherInput.type == "radio" &&
+      thisSavedInput["value"] == otherInput.value) ||
+    thisSavedInput["ng-model"] == otherInput.getAttribute("ng-model");
+}
+
 function addSaveButton() {
   const btnSave = document.createElement("button");
   btnSave.innerHTML = logoSvg + " Ulož";
@@ -74,9 +82,7 @@ function fnFillForm(formArray) {
       const inputEvent = new InputEvent("input");
       const changeEvent = new InputEvent("change");
       const blurEvent = new FocusEvent("blur");
-      const savedInput = formArray.find(
-        (x) => x["ng-model"] == input.getAttribute("ng-model")
-      );
+      const savedInput = formArray.find(isSavedMatchingInput(input));
       if (savedInput !== undefined) {
         if (input.type == "checkbox" || input.type == "radio") {
           input.checked = savedInput.checked;
@@ -100,8 +106,8 @@ function fnFillForm(formArray) {
         }
 
         let unmatched = "";
-        if(unmatchedInputs.length < 0){
-            unmatched = `(nenapárovaných ${unmatchedInputs.length} políčok)`
+        if (unmatchedInputs.length > 0) {
+          unmatched = `(nenapárovaných ${unmatchedInputs.length} políčok)`;
         }
         alert(`Formulár vyplnený ${unmatched}`);
       });
@@ -140,7 +146,7 @@ function addLoadButtons() {
         elFillInInner.append(btn);
       }
     }
-    
+
     const btnClear = document.createElement("button");
     btnClear.addEventListener("click", clearStorage);
     btnClear.textContent = "Vymazať zapamätané údaje";
@@ -149,10 +155,13 @@ function addLoadButtons() {
     btnClear.style.margin = "0.3em";
     btnClear.style.marginLeft = "auto";
     elFillInInner.append(btnClear);
-    elFillIn.append(elFillInInner);
+
     if (!empty) {
-      elPatientForm.prepend(elFillIn);
+      elFillIn.append(elFillInInner);
+    } else {
+      elPatientForm;
     }
+    elPatientForm.prepend(elFillIn);
   });
 }
 
