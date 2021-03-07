@@ -24,11 +24,20 @@ function saveForm(e) {
     const inputs = getInputs();
     const formArr = [];
     for (const i of inputs) {
-      formArr.push({ value: i.value, type: i.type, checked: i.checked });
+      formArr.push({
+        value: i.value,
+        type: i.type,
+        checked: i.checked,
+        "ng-model": i.getAttribute("ng-model"),
+        name: i.name,
+      });
     }
 
     const existing = multiFormArr.findIndex(
-      (x) => x[1].value === formArr[1].value && x[2].value === formArr[2].value
+      (x) =>
+        x[1].value === formArr[1].value &&
+        x[2].value === formArr[2].value &&
+        x[3].value === formArr[3].value
     );
     console.log(multiFormArr);
     console.log(formArr);
@@ -60,27 +69,32 @@ function fnFillForm(formArray) {
     console.log(e);
     e.preventDefault();
     const inputs = getInputs();
-    let i = 0;
     for (const input of inputs) {
       const inputEvent = new InputEvent("input");
+      const changeEvent = new InputEvent("change");
       const blurEvent = new FocusEvent("blur");
+      const savedInput = formArray.find(
+        (x) => x["ng-model"] == input.getAttribute("ng-model")
+      );
       if (input.type == "checkbox" || input.type == "radio") {
-        input.checked = formArray[i].checked;
+        input.checked = savedInput.checked;
       } else {
-        input.value = formArray[i].value;
+        input.value = savedInput.value;
       }
 
       input.dispatchEvent(inputEvent);
+      input.dispatchEvent(changeEvent);
       input.dispatchEvent(blurEvent);
-      i += 1;
     }
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
+        const elCalendar = document.getElementById("vacc_calendar");
+        if (elCalendar) {
+          elCalendar.scrollIntoView({ behavior: "smooth", block: "start" });
+          window.scrollBy(0, -80);
+        }
+
         alert("Formulár vyplnený");
-        document
-          .getElementById("vacc_calendar")
-          .scrollIntoView({ behavior: "smooth", block: "start" });
-        window.scrollBy(0, -80);
       });
     });
   };
