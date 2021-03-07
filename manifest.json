@@ -1,0 +1,42 @@
+{
+  "manifest_version": 3,
+  "name": "Lepšia NCZI registrácia",
+  "version": "0.1",
+  "description": "Vylepšenie NCZI očkovacieho formuláru",
+  // "default_locale": "sk",
+  "author": "pom",
+
+  "permissions": ["storage", "activeTab", "scripting"],
+
+  "icons": {
+    "16": "src/img/syringe-16.png",
+    "32": "src/img/syringe-32.png",
+    "48": "src/img/syringe-48.png",
+    "128": "src/img/syringe-128.png"
+  },
+
+  "action": {
+    // "default_popup": "src/ui/popup.html",
+    "default_title": "Lepšia NCZI registrácia"
+  },
+
+  // "background": {
+  //   "service_worker": "src/background.js"
+  // },
+  "options_page": "src/ui/options.html",
+  "host_permissions": [
+    "http://www.old.korona.gov.sk/",
+    "https://www.old.korona.gov.sk/"
+    // ,"*://*/*"
+  ],
+  "content_scripts": [
+    {
+      "matches": [
+        "https://www.old.korona.gov.sk/*",
+        "https://www.old.korona.gov.sk/covid-19-vaccination-form.php"
+      ],
+      // "css": ["srmyStyles.css"],
+      "js": ["src/content.js"]
+    }
+  ]
+}
