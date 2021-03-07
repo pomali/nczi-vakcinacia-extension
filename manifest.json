@@ -14,20 +14,13 @@
     "48": "src/img/syringe-48.png",
     "128": "src/img/syringe-128.png"
   },
-
-  "action": {
-    // "default_popup": "src/ui/popup.html",
-    "default_title": "Lepšia NCZI registrácia"
-  },
-
-  // "background": {
-  //   "service_worker": "src/background.js"
+  // "action": {
+  //   "default_title": "Lepšia NCZI registrácia"
   // },
   "options_page": "src/ui/options.html",
   "host_permissions": [
     "http://www.old.korona.gov.sk/",
     "https://www.old.korona.gov.sk/"
-    // ,"*://*/*"
   ],
   "content_scripts": [
     {
@@ -35,7 +28,6 @@
         "https://www.old.korona.gov.sk/*",
         "https://www.old.korona.gov.sk/covid-19-vaccination-form.php"
       ],
-      // "css": ["srmyStyles.css"],
       "js": ["src/content.js"]
     }
   ]
