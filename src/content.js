@@ -126,24 +126,30 @@ function addLoadButtons() {
     elFillIn.style.padding = "1rem";
     elFillIn.style.borderRadius = ".3rem";
     elFillIn.style.backgroundColor = "#d0d0d0";
+    const elFillInInner = document.createElement("div");
+    elFillInInner.style.display = "flex";
+    elFillInInner.style.flexWrap = "wrap";
     for (const f of result.multiFormArr) {
       if (f) {
         empty = false;
         const btn = document.createElement("button");
         btn.className = "btn btn-primary";
+        btn.style.margin = "0.3em";
         btn.textContent = `${f[1].value} ${f[2].value}`;
         btn.addEventListener("click", fnFillForm(f));
-        elFillIn.append(btn);
+        elFillInInner.append(btn);
       }
     }
-
+    
     const btnClear = document.createElement("button");
     btnClear.addEventListener("click", clearStorage);
     btnClear.textContent = "Vymazať zapamätané údaje";
     btnClear.className = "btn btn-secondary";
-    btnClear.style.float = "right";
     btnClear.style.fontSize = "0.8em";
-    elFillIn.append(btnClear);
+    btnClear.style.margin = "0.3em";
+    btnClear.style.marginLeft = "auto";
+    elFillInInner.append(btnClear);
+    elFillIn.append(elFillInInner);
     if (!empty) {
       elPatientForm.prepend(elFillIn);
     }
