@@ -104,12 +104,6 @@ function fnFillForm(formArray) {
     }
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        const elCalendar = document.getElementById("vacc_calendar");
-        if (elCalendar) {
-          elCalendar.scrollIntoView({ behavior: "smooth", block: "start" });
-          window.scrollBy(0, -80);
-        }
-
         let unmatched = "";
         if (unmatchedInputs.length > 0) {
           unmatched = `(nenapárovaných ${unmatchedInputs.length} políčok)`;
@@ -170,8 +164,8 @@ function addLoadButtons() {
       elFillIn.append(elFillInInner);
     } else {
       elFillIn.innerHTML = `<h3>${logoSvg} Tu nájdete uložené osoby</h3>
-      <p>Vyplňte si formulár a na konci stlačte tlacidlo <b>Uložiť údaje o osobe</b>.</p>
-      <p>Nabudúce si vyberiete uloženú osobu, vyberiete si termín a dole zaškrtnite, že nie ste robot.</p> ${disclaimer}`;
+      <p>Vyplňte si formulár a na konci stlačte <b>Uložiť údaje o osobe</b>.</p>
+      <p>Nabudúce si vyberiete uloženú osobu, vyberiete si termín a dole zaškrtnete, že nie ste robot.</p> ${disclaimer}`;
     }
     elPatientForm.prepend(elFillIn);
   });
