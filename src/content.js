@@ -131,11 +131,11 @@ function addLoadButtons() {
   storage.get({ multiFormArr: [] }, function (result) {
     let empty = true;
     const disclaimer =
-      "<p>Údaje sú ukladané lokálne, iba na tomto počítači</p>";
+      `<p class="pom-nve-disclaimer">Údaje sú ukladané lokálne, iba na tomto počítači.</p>`;
     const elFillIn = document.createElement("div");
     elFillIn.className = "pom-nve-top";
     elFillIn.innerHTML = `<h3>${logoSvg} Vyplniť údaje uloženej osoby</h3>
-    <p>Po stlačení tlačidla s menom osoby sa vyplní formulár tak ako bol naposledy uložený. Potom si vyberte termín, zakliknite že nie ste robot a odošlite. Alebo ručne vyplňte inú osobu.</p>`;
+    <p>Po stlačení tlačidla s menom osoby sa vyplní formulár tak ako bol naposledy uložený. Potom si vyberte termín, zakliknite že nie ste robot a odošlite. Alebo ručne vyplňte inú osobu.</p>${disclaimer}`;
     const elFillInInner = document.createElement("div");
     elFillInInner.style.display = "flex";
     elFillInInner.style.flexWrap = "wrap";
@@ -171,7 +171,7 @@ function addLoadButtons() {
     } else {
       elFillIn.innerHTML = `<h3>${logoSvg} Tu nájdete uložené osoby</h3>
       <p>Vyplňte si formulár a na konci stlačte tlacidlo <b>Uložiť údaje o osobe</b>.</p>
-      <p>Nabudúce si vyberiete uloženú osobu, vyberiete si termín a dole zaškrtnite, že nie ste robot.</p>`;
+      <p>Nabudúce si vyberiete uloženú osobu, vyberiete si termín a dole zaškrtnite, že nie ste robot.</p> ${disclaimer}`;
     }
     elPatientForm.prepend(elFillIn);
   });

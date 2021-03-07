@@ -14,10 +14,6 @@
     "128": "src/img/syringe-128.png"
   },
   "options_page": "src/ui/options.html",
-  // "host_permissions": [
-  //   "http://www.old.korona.gov.sk/",
-  //   "https://www.old.korona.gov.sk/"
-  // ],
   "content_scripts": [
     {
       "matches": [
