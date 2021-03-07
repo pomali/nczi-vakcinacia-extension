@@ -1,0 +1,25 @@
+button.pom-nve-btn-primary {
+  color: #fff;
+  background-color: #28a745;
+  border-color: #28a745;
+  margin: 3em;
+}
+
+button.pom-nve-btn-secondary {
+  margin-top: 15px;
+  margin-right: 20px;
+
+  font-weight: bold;
+  color: #fff;
+  background-color: #6c757d;
+  border: #ffc107 0.3em solid;
+}
+
+
+.pom-nve-top {
+  margin-bottom: 1rem;
+  padding: 1rem;
+  border-radius: 0.3rem;
+  background-color: #d0d0d0;
+  border: #ffc107 0.3em solid;
+}

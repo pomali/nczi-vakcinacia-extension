@@ -24,6 +24,7 @@
         "https://www.old.korona.gov.sk/*",
         "https://www.old.korona.gov.sk/covid-19-vaccination-form.php"
       ],
+      "css": ["src/extension.css"],
       "js": ["src/content.js"]
     }
   ]
