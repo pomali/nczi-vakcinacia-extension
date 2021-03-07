@@ -69,6 +69,7 @@ function fnFillForm(formArray) {
     console.log(e);
     e.preventDefault();
     const inputs = getInputs();
+    const unmatchedInputs = [];
     for (const input of inputs) {
       const inputEvent = new InputEvent("input");
       const changeEvent = new InputEvent("change");
@@ -76,15 +77,19 @@ function fnFillForm(formArray) {
       const savedInput = formArray.find(
         (x) => x["ng-model"] == input.getAttribute("ng-model")
       );
-      if (input.type == "checkbox" || input.type == "radio") {
-        input.checked = savedInput.checked;
-      } else {
-        input.value = savedInput.value;
-      }
+      if (savedInput !== undefined) {
+        if (input.type == "checkbox" || input.type == "radio") {
+          input.checked = savedInput.checked;
+        } else {
+          input.value = savedInput.value;
+        }
 
-      input.dispatchEvent(inputEvent);
-      input.dispatchEvent(changeEvent);
-      input.dispatchEvent(blurEvent);
+        input.dispatchEvent(inputEvent);
+        input.dispatchEvent(changeEvent);
+        input.dispatchEvent(blurEvent);
+      } else {
+        unmatchedInputs.push(input);
+      }
     }
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
@@ -94,7 +99,11 @@ function fnFillForm(formArray) {
           window.scrollBy(0, -80);
         }
 
-        alert("Formulár vyplnený");
+        let unmatched = "";
+        if(unmatchedInputs.length < 0){
+            unmatched = `(nenapárovaných ${unmatchedInputs.length} políčok)`
+        }
+        alert(`Formulár vyplnený ${unmatched}`);
       });
     });
   };
