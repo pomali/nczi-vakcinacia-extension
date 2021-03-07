@@ -1,11 +1,11 @@
 {
-  "manifest_version": 3,
+  "manifest_version": 2,
   "name": "Lepšia NCZI registrácia",
   "version": "0.1",
   "description": "Vylepšenie NCZI očkovacieho formuláru",
   "author": "pom",
 
-  "permissions": ["storage", "activeTab", "scripting"],
+  "permissions": ["storage", "activeTab"],
 
   "icons": {
     "16": "src/img/syringe-16.png",
@@ -14,10 +14,10 @@
     "128": "src/img/syringe-128.png"
   },
   "options_page": "src/ui/options.html",
-  "host_permissions": [
-    "http://www.old.korona.gov.sk/",
-    "https://www.old.korona.gov.sk/"
-  ],
+  // "host_permissions": [
+  //   "http://www.old.korona.gov.sk/",
+  //   "https://www.old.korona.gov.sk/"
+  // ],
   "content_scripts": [
     {
       "matches": [

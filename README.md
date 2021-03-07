@@ -7,3 +7,10 @@
 - Open `chrome://extensions`
 - Enable development mode
 - "Load unpacked"
+
+
+# Build
+
+```
+web-ext run --source-dir ./nczi-vakcinacia-extension
+```
