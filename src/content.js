@@ -135,7 +135,7 @@ function addLoadButtons() {
     const elFillIn = document.createElement("div");
     elFillIn.className = "pom-nve-top";
     elFillIn.innerHTML = `<h3>${logoSvg} Vyplniť údaje uloženej osoby</h3>
-    <p>Po stlačení tlačidla s menom osoby sa vyplní formulár tak ako bol naposledy uložený. Potom si vyberte termín, zakliknite že nie ste robot a odošlite.</p>`;
+    <p>Po stlačení tlačidla s menom osoby sa vyplní formulár tak ako bol naposledy uložený. Potom si vyberte termín, zakliknite že nie ste robot a odošlite. Alebo ručne vyplňte inú osobu.</p>`;
     const elFillInInner = document.createElement("div");
     elFillInInner.style.display = "flex";
     elFillInInner.style.flexWrap = "wrap";
