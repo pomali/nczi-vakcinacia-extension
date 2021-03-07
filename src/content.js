@@ -22,7 +22,6 @@ function getValueByNgModel(formArr, ngModelKey) {
 }
 
 function saveForm(e) {
-  console.log(e);
   e.preventDefault();
   storage.get({ multiFormArr: [] }, (result) => {
     let multiFormArr = result.multiFormArr;
@@ -48,9 +47,6 @@ function saveForm(e) {
           getValueByNgModel(formArr, "form_data.birth_number")
       // TODO this fails for ppl without RC/BN/BIC
     );
-    console.log(multiFormArr);
-    console.log(formArr);
-    console.log(existing);
     if (existing == -1) {
       multiFormArr.push(formArr);
     } else {
@@ -58,7 +54,6 @@ function saveForm(e) {
     }
 
     storage.set({ multiFormArr: multiFormArr }, function (result) {
-      console.log(result);
       alert("Formulár uložený");
     });
   });
@@ -84,7 +79,6 @@ function addSaveButton() {
 
 function fnFillForm(formArray) {
   return function fillForm(e) {
-    console.log(e);
     e.preventDefault();
     const inputs = getInputs();
     const unmatchedInputs = [];
@@ -93,9 +87,7 @@ function fnFillForm(formArray) {
       const changeEvent = new InputEvent("change");
       const blurEvent = new FocusEvent("blur");
       const savedInput = formArray.find(isSavedMatchingInput(input));
-      if (input.type == "radio") {
-        debugger;
-      }
+
       if (savedInput !== undefined) {
         if (input.type == "checkbox" || input.type == "radio") {
           input.checked = savedInput.checked;
@@ -128,7 +120,6 @@ function fnFillForm(formArray) {
   };
 }
 function clearStorage(e) {
-  console.log(e);
   e.preventDefault();
   storage.clear(function () {
     var error = chrome.runtime.lastError;
