@@ -12,5 +12,5 @@
 # Build
 
 ```
-web-ext build -i README.md --source-dir ./nczi-vakcinacia-extension --overwrite-dest --filename nczi-vakcinacia-extension-0.1.zip
+web-ext build -i README.md --source-dir ./nczi-vakcinacia-extension --overwrite-dest --filename nczi-vakcinacia-extension-0.1.1.zip
 ```
