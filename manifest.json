@@ -5,7 +5,7 @@
   "description": "Vylepšenie NCZI očkovacieho formuláru",
   "author": "pom",
 
-  "permissions": ["storage", "activeTab"],
+  "permissions": ["storage"],
 
   "icons": {
     "16": "src/img/syringe-16.png",
