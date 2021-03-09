@@ -29,6 +29,22 @@ function valueIsSameOrFirstEmpty(formArr1, formArr2, ngModelKey) {
   );
 }
 
+function fnSavedIsMatching(formArr) {
+  return (existingFormArr) =>
+    valueIsSameOrFirstEmpty(existingFormArr, formArr, "form_data.first_name") &&
+    valueIsSameOrFirstEmpty(existingFormArr, formArr, "form_data.last_name") &&
+    (valueIsSameOrFirstEmpty(
+      existingFormArr,
+      formArr,
+      "form_data.birth_number"
+    ) ||
+      valueIsSameOrFirstEmpty(
+        existingFormArr,
+        formArr,
+        "form_data.personal_id"
+      ));
+}
+
 function saveForm(e) {
   e.preventDefault();
   storage.get({ multiFormArr: [] }, (result) => {
@@ -49,17 +65,11 @@ function saveForm(e) {
       getValueByNgModel(formArr, "form_data.last_name") === "" &&
       getValueByNgModel(formArr, "form_data.birth_number") === ""
     ) {
-      alert("Formuár je prázdny");
+      alert("Formuár je prázdny😢\n     [Lepší očkovací formulár]");
       return;
     }
 
-    const existing = multiFormArr.findIndex(
-      (x) =>
-        valueIsSameOrFirstEmpty(x, formArr, "form_data.first_name") &&
-        valueIsSameOrFirstEmpty(x, formArr, "form_data.last_name") &&
-        valueIsSameOrFirstEmpty(x, formArr, "form_data.birth_number")
-      // TODO this fails for ppl without RC/BN/BIC
-    );
+    const existing = multiFormArr.findIndex(fnSavedIsMatching(formArr));
     if (existing == -1) {
       multiFormArr.push(formArr);
     } else {
@@ -67,7 +77,7 @@ function saveForm(e) {
     }
 
     storage.set({ multiFormArr: multiFormArr }, function (result) {
-      alert("Formulár uložený");
+      alert("Formulár bol uložený ✅\n     [Lepší očkovací formulár]");
     });
   });
 }
@@ -92,86 +102,136 @@ function addSaveButton() {
   }
 }
 
+function fillOnce(formArray) {
+  const inputs = getInputs();
+  const unmatchedInputs = [];
+  let unusedSaved = formArray.map((x) => x["ng-model"]);
+  for (const input of inputs) {
+    const inputEvent = new InputEvent("input");
+    const changeEvent = new InputEvent("change");
+    const blurEvent = new FocusEvent("blur");
+    const savedInput = formArray.find(isSavedMatchingInput(input));
+
+    if (savedInput !== undefined) {
+      unusedSaved = unusedSaved.filter((x) => x === savedInput["ng-model"]);
+      if (input.type == "checkbox" || input.type == "radio") {
+        input.checked = savedInput.checked;
+      } else {
+        input.value = savedInput.value;
+      }
+
+      input.dispatchEvent(inputEvent);
+      input.dispatchEvent(changeEvent);
+      input.dispatchEvent(blurEvent);
+    } else {
+      unmatchedInputs.push(input);
+    }
+  }
+  return unmatchedInputs;
+}
+
 function fnFillForm(formArray) {
   return function fillForm(e) {
     e.preventDefault();
-    const inputs = getInputs();
-    const unmatchedInputs = [];
-    for (const input of inputs) {
-      const inputEvent = new InputEvent("input");
-      const changeEvent = new InputEvent("change");
-      const blurEvent = new FocusEvent("blur");
-      const savedInput = formArray.find(isSavedMatchingInput(input));
 
-      if (savedInput !== undefined) {
-        if (input.type == "checkbox" || input.type == "radio") {
-          input.checked = savedInput.checked;
-        } else {
-          input.value = savedInput.value;
-        }
-
-        input.dispatchEvent(inputEvent);
-        input.dispatchEvent(changeEvent);
-        input.dispatchEvent(blurEvent);
-      } else {
-        unmatchedInputs.push(input);
-      }
-    }
+    fillOnce(formArray);
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
+        const unmatchedInputs = fillOnce(formArray);
         let unmatched = "";
         if (unmatchedInputs.length > 0) {
-          unmatched = `(nenapárovaných ${unmatchedInputs.length} políčok)`;
+          unmatched = `(nenapárovaných ${unmatchedInputs.length} políčok‼️)`;
         }
-        alert(`Formulár vyplnený ${unmatched}`);
+        alert(`Formulár vyplnený ✅${unmatched}\n     [Lepší očkovací formulár]`);
       });
     });
   };
 }
 function clearStorage(e) {
   e.preventDefault();
-  storage.clear(function () {
-    var error = chrome.runtime.lastError;
-    console.log(error);
-    alert("Uložené údaje vymazané");
-  });
+  const isDeleteConfirmed = confirm(
+    "Mám vymazať všetko? 🗑\n     [Lepší očkovací formulár]"
+  );
+  if (isDeleteConfirmed) {
+    storage.clear(function () {
+      var error = chrome.runtime.lastError;
+      console.log(error);
+      alert("Uložené údaje vymazané 🗑\n     [Lepší očkovací formulár]");
+    });
+  }
 }
+
+function fnRemoveData(savedData) {
+  return (e) => {
+    e.preventDefault();
+    const isDeleteConfirmed = confirm(
+      `Mám vymazať 🗑 ${nameOfForm(savedData)}?\n     [Lepší očkovací formulár]`
+    );
+    if (isDeleteConfirmed) {
+      storage.get({ multiFormArr: [] }, function (result) {
+        let multiFormArr = result.multiFormArr;
+        const existing = multiFormArr.findIndex(fnSavedIsMatching(savedData));
+        if (existing == -1) {
+          alert(
+            "Neviem vymazať neexistujúce údaje\n     [Lepší očkovací formulár]"
+          );
+        } else {
+          multiFormArr.splice(existing, 1);
+        }
+
+        storage.set({ multiFormArr: multiFormArr }, function (result) {
+          alert(
+            `Údaje o ${getValueByNgModel(
+              savedData,
+              "form_data.first_name"
+            )} boli zmazané 🗑\n     [Lepší očkovací formulár]`
+          );
+        });
+      });
+    }
+  };
+}
+
+function nameOfForm(f) {
+  return `${getValueByNgModel(f, "form_data.first_name")} ${getValueByNgModel(
+    f,
+    "form_data.last_name"
+  )} (${getValueByNgModel(f, "form_data.birth_number")})`;
+}
+
 function addLoadButtons() {
   storage.get({ multiFormArr: [] }, function (result) {
     let empty = true;
-    const disclaimer = `<p class="pom-nve-disclaimer">Údaje sú ukladané lokálne, iba na tomto počítači.</p>`;
+    const disclaimer = `<p class="pom-nve-disclaimer">Údaje sú ukladané lokálne, iba na tomto počítači.  <i>[Lepší očkovací formulár]</i></p>`;
     const elFillIn = document.createElement("div");
     elFillIn.className = "pom-nve-top";
     elFillIn.innerHTML = `<h3>${logoSvg} Vyplniť údaje uloženej osoby</h3>
     <p>Po stlačení tlačidla s menom osoby sa vyplní formulár tak ako bol naposledy uložený. Potom si vyberte termín, zakliknite že nie ste robot a odošlite. Alebo ručne vyplňte inú osobu.</p>${disclaimer}`;
     const elFillInInner = document.createElement("div");
-    elFillInInner.style.display = "flex";
-    elFillInInner.style.flexWrap = "wrap";
+    elFillInInner.className = "pom-nve-div-fillInner";
     for (const f of result.multiFormArr) {
       if (f) {
         empty = false;
+        const elBtnWrap = document.createElement("div");
+        elBtnWrap.className = "pom-nve-btn-wrapper";
+        const btnRemove = document.createElement("button");
+        btnRemove.innerHTML = `<i class="far fa-trash-alt"></i>`;
+        btnRemove.className = "pom-nve-btn-remove";
+        btnRemove.addEventListener("click", fnRemoveData(f));
         const btn = document.createElement("button");
         btn.className = "btn pom-nve-btn-primary";
-        btn.style.margin = "0.3em";
-        btn.textContent = `${getValueByNgModel(
-          f,
-          "form_data.first_name"
-        )} ${getValueByNgModel(f, "form_data.last_name")} (${getValueByNgModel(
-          f,
-          "form_data.birth_number"
-        )})`;
+        btn.textContent = nameOfForm(f);
         btn.addEventListener("click", fnFillForm(f));
-        elFillInInner.append(btn);
+        elBtnWrap.append(btn);
+        elBtnWrap.append(btnRemove);
+        elFillInInner.append(elBtnWrap);
       }
     }
 
     const btnClear = document.createElement("button");
     btnClear.addEventListener("click", clearStorage);
-    btnClear.textContent = "Vymazať zapamätané údaje";
-    btnClear.className = "btn btn-secondary";
-    btnClear.style.fontSize = "0.8em";
-    btnClear.style.margin = "0.3em";
-    btnClear.style.marginLeft = "auto";
+    btnClear.textContent = "Vymazať všetko zapamätané";
+    btnClear.className = "btn btn-secondary pom-nve-btn-clearall";
     elFillInInner.append(btnClear);
 
     if (!empty) {
@@ -188,17 +248,6 @@ function init() {
   addSaveButton();
   addLoadButtons();
   loadForms();
-
-  // const angularInterval = setInterval(function () {
-  //   try {
-  //     $scope = globalThis.angular.element(document.forms.patientForm).scope();
-  //     console.log($scope);
-  //     clearInterval(angularInterval);
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }, 1000);
-  // // debugger;
 }
 
 init();
