@@ -21,6 +21,14 @@ function getValueByNgModel(formArr, ngModelKey) {
   return found ? found.value : found;
 }
 
+function valueIsSameOrFirstEmpty(formArr1, formArr2, ngModelKey) {
+  return (
+    getValueByNgModel(formArr1, ngModelKey) === "" ||
+    getValueByNgModel(formArr1, ngModelKey) ===
+      getValueByNgModel(formArr2, ngModelKey)
+  );
+}
+
 function saveForm(e) {
   e.preventDefault();
   storage.get({ multiFormArr: [] }, (result) => {
@@ -36,15 +44,20 @@ function saveForm(e) {
         name: i.name,
       });
     }
+    if (
+      getValueByNgModel(formArr, "form_data.first_name") === "" &&
+      getValueByNgModel(formArr, "form_data.last_name") === "" &&
+      getValueByNgModel(formArr, "form_data.birth_number") === ""
+    ) {
+      alert("Formuár je prázdny");
+      return;
+    }
 
     const existing = multiFormArr.findIndex(
       (x) =>
-        getValueByNgModel(x, "form_data.first_name") ===
-          getValueByNgModel(formArr, "form_data.first_name") &&
-        getValueByNgModel(x, "form_data.last_name") ===
-          getValueByNgModel(formArr, "form_data.last_name") &&
-        getValueByNgModel(x, "form_data.birth_number") ===
-          getValueByNgModel(formArr, "form_data.birth_number")
+        valueIsSameOrFirstEmpty(x, formArr, "form_data.first_name") &&
+        valueIsSameOrFirstEmpty(x, formArr, "form_data.last_name") &&
+        valueIsSameOrFirstEmpty(x, formArr, "form_data.birth_number")
       // TODO this fails for ppl without RC/BN/BIC
     );
     if (existing == -1) {
@@ -74,7 +87,9 @@ function addSaveButton() {
   btnSave.innerHTML = logoSvg + " Uložiť údaje o osobe";
   btnSave.className = "btn pom-nve-btn-secondary";
   btnSave.addEventListener("click", saveForm);
-  elPatientForm.appendChild(btnSave);
+  if (elPatientForm) {
+    elPatientForm.appendChild(btnSave);
+  }
 }
 
 function fnFillForm(formArray) {
@@ -124,8 +139,7 @@ function clearStorage(e) {
 function addLoadButtons() {
   storage.get({ multiFormArr: [] }, function (result) {
     let empty = true;
-    const disclaimer =
-      `<p class="pom-nve-disclaimer">Údaje sú ukladané lokálne, iba na tomto počítači.</p>`;
+    const disclaimer = `<p class="pom-nve-disclaimer">Údaje sú ukladané lokálne, iba na tomto počítači.</p>`;
     const elFillIn = document.createElement("div");
     elFillIn.className = "pom-nve-top";
     elFillIn.innerHTML = `<h3>${logoSvg} Vyplniť údaje uloženej osoby</h3>
