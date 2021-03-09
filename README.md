@@ -10,8 +10,9 @@
 
 # Published browser extensions
 
+- <a href="https://chrome.google.com/webstore/detail/lep%C5%A1ia-nczi-registr%C3%A1cia/fniphkhigniidpeeogcnmhgcnhfnajbo">🐶 Chrome</a>
 - <a href="https://addons.mozilla.org/en-US/developers/addon/lep%C5%A1ia-nczi-registr%C3%A1cia" >🦊 Firefox</a>
-- Chrome and Edge in review
+- <!--🐠--> Edge in review
 # Development installation
 
 - Pull repo or download [zip](https://github.com/pomali/nczi-vakcinacia-extension/archive/v0.1.1.zip) from releases
