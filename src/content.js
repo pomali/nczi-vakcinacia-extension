@@ -142,7 +142,9 @@ function fnFillForm(formArray) {
         if (unmatchedInputs.length > 0) {
           unmatched = `(nenapárovaných ${unmatchedInputs.length} políčok‼️)`;
         }
-        alert(`Formulár vyplnený ✅${unmatched}\n     [Lepší očkovací formulár]`);
+        alert(
+          `Formulár vyplnený ✅${unmatched}\n     [Lepší očkovací formulár]`
+        );
       });
     });
   };
@@ -248,6 +250,12 @@ function init() {
   addSaveButton();
   addLoadButtons();
   loadForms();
+  // Autoselect whole RC so you can paste into it
+  document
+    .getElementsByName("birthNumber")[0]
+    .addEventListener("click", (e) => {
+      e.target.setSelectionRange(0, 10);
+    });
 }
 
 init();
