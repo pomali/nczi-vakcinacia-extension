@@ -184,7 +184,21 @@ function addLoadButtons() {
     elPatientForm.prepend(elFillIn);
   });
 }
+function init() {
+  addSaveButton();
+  addLoadButtons();
+  loadForms();
 
-addSaveButton();
-addLoadButtons();
-loadForms();
+  // const angularInterval = setInterval(function () {
+  //   try {
+  //     $scope = globalThis.angular.element(document.forms.patientForm).scope();
+  //     console.log($scope);
+  //     clearInterval(angularInterval);
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }, 1000);
+  // // debugger;
+}
+
+init();
