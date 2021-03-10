@@ -92,6 +92,21 @@ function isSavedMatchingInput(otherInput) {
       thisSavedInput["ng-model"] == otherInput.getAttribute("ng-model"));
 }
 
+function setInputValue(input, value, checked) {
+  const inputEvent = new InputEvent("input");
+  const changeEvent = new InputEvent("change");
+  const blurEvent = new FocusEvent("blur");
+  if (input.type == "checkbox" || input.type == "radio") {
+    input.checked = checked;
+  } else {
+    input.value = value;
+  }
+
+  input.dispatchEvent(inputEvent);
+  input.dispatchEvent(changeEvent);
+  input.dispatchEvent(blurEvent);
+}
+
 function addSaveButton() {
   const btnSave = document.createElement("button");
   btnSave.innerHTML = logoSvg + " Uložiť údaje o osobe";
@@ -107,22 +122,22 @@ function fillOnce(formArray) {
   const unmatchedInputs = [];
   let unusedSaved = formArray.map((x) => x["ng-model"]);
   for (const input of inputs) {
-    const inputEvent = new InputEvent("input");
-    const changeEvent = new InputEvent("change");
-    const blurEvent = new FocusEvent("blur");
     const savedInput = formArray.find(isSavedMatchingInput(input));
 
     if (savedInput !== undefined) {
       unusedSaved = unusedSaved.filter((x) => x === savedInput["ng-model"]);
-      if (input.type == "checkbox" || input.type == "radio") {
-        input.checked = savedInput.checked;
-      } else {
-        input.value = savedInput.value;
-      }
 
-      input.dispatchEvent(inputEvent);
-      input.dispatchEvent(changeEvent);
-      input.dispatchEvent(blurEvent);
+      /* 
+      This is special case of fragment-search API
+      If we have this field filled out we skip replacing it
+      */
+      if (
+        savedInput["ng-model"] == "form_data.searching" &&
+        input.value !== ""
+      ) {
+        continue;
+      }
+      setInputValue(input, savedInput.value, savedInput.checked);
     } else {
       unmatchedInputs.push(input);
     }
@@ -134,6 +149,8 @@ function fnFillForm(formArray) {
   return function fillForm(e) {
     e.preventDefault();
 
+    calendarSearchFromFragment();
+    
     fillOnce(formArray);
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
@@ -246,16 +263,48 @@ function addLoadButtons() {
     elPatientForm.prepend(elFillIn);
   });
 }
+
+function findInputByNgModel(ngModelKey) {
+  return Array.from(getInputs()).find(
+    (x) => x.getAttribute("ng-model") === ngModelKey
+  );
+}
+
+function calendarSearchFromFragment() {
+  if (window.location.hash) {
+    const fragment = window.location.hash.replace(/^[#!]*/, "");
+    const params = new URLSearchParams(fragment);
+    const strInput = params.get("cal_search");
+    if (strInput) {
+      try {
+        const elSearch = findInputByNgModel("form_data.searching");
+        setInputValue(elSearch, strInput, false);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  }
+}
+
+function birthNumberAutoSelect() {
+  try {
+    // Autoselect whole RC so you can paste into it
+    document
+      .getElementsByName("birthNumber")[0]
+      .addEventListener("click", (e) => {
+        e.target.setSelectionRange(0, 10);
+      });
+  } catch (error) {
+    console.error(error);
+  }
+}
+
 function init() {
+  calendarSearchFromFragment();
   addSaveButton();
   addLoadButtons();
   loadForms();
-  // Autoselect whole RC so you can paste into it
-  document
-    .getElementsByName("birthNumber")[0]
-    .addEventListener("click", (e) => {
-      e.target.setSelectionRange(0, 10);
-    });
+  birthNumberAutoSelect();
 }
 
 init();
