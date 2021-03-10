@@ -132,8 +132,9 @@ function fillOnce(formArray) {
       If we have this field filled out we skip replacing it
       */
       if (
-        savedInput["ng-model"] == "form_data.searching" &&
-        input.value !== ""
+        (savedInput["ng-model"] == "form_data.searching" &&
+          input.value !== "") ||
+        savedInput["ng-model"] == "form_data.show_only_free"
       ) {
         continue;
       }
@@ -150,7 +151,7 @@ function fnFillForm(formArray) {
     e.preventDefault();
 
     calendarSearchFromFragment();
-    
+
     fillOnce(formArray);
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
@@ -279,6 +280,13 @@ function calendarSearchFromFragment() {
       try {
         const elSearch = findInputByNgModel("form_data.searching");
         setInputValue(elSearch, strInput, false);
+        if (strInput.length > 0) {
+          const elCheckboxOnlyFree = findInputByNgModel(
+            "form_data.show_only_free"
+          );
+          elCheckboxOnlyFree.value = "off";
+          setInputValue(elCheckboxOnlyFree, "off", false);
+        }
       } catch (error) {
         console.error(error);
       }
