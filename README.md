@@ -27,8 +27,18 @@ Viete si ich kedykoľvek vymazať priamo vo formulári alebo odstránením rozš
 Zdrojový kód: https://github.com/pomali/nczi-vakcinacia-extension
 
 # Features
+
 - Save & Load forms on old.korona.gov.sk (v0.1+)
 - Autofills "calendar" search from url fragment (hash) (v0.2+)
+- Better labels and some tips
+
+# Why?
+
+Why this instead of general purpose autofill?
+
+> - I was trying to create more integrated experience, like if my grandma had to use it ... 🤨
+> - General purpose extensions have problem with some fields since, the form page, is not any good.
+> - There are some other quick wins possible with custom extension (look at features 🙂)
 
 # Development installation
 
