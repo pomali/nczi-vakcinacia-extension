@@ -26,6 +26,10 @@ Viete si ich kedykoľvek vymazať priamo vo formulári alebo odstránením rozš
 
 Zdrojový kód: https://github.com/pomali/nczi-vakcinacia-extension
 
+# Features
+- Save & Load forms on old.korona.gov.sk (v0.1+)
+- Autofills "calendar" search from url fragment (hash) (v0.2+)
+
 # Development installation
 
 - Pull repo or download [zip](https://github.com/pomali/nczi-vakcinacia-extension/archive/v0.1.1.zip) from releases
@@ -36,7 +40,7 @@ Zdrojový kód: https://github.com/pomali/nczi-vakcinacia-extension
 # Build
 
 ```
-web-ext build -i "README.md" -i "screenshots" --source-dir ./nczi-vakcinacia-extension --overwrite-dest --filename nczi-vakcinacia-extension-0.1.1.zip
+web-ext build -i "README.md" -i "screenshots" --source-dir ./nczi-vakcinacia-extension --overwrite-dest --filename nczi-vakcinacia-extension-0.2.zip
 ```
 
 # Talk to me
