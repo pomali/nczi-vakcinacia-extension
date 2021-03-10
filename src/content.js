@@ -297,14 +297,34 @@ function calendarSearchFromFragment() {
 function birthNumberAutoSelect() {
   try {
     // Autoselect whole RC so you can paste into it
-    document
-      .getElementsByName("birthNumber")[0]
-      .addEventListener("click", (e) => {
-        e.target.setSelectionRange(0, 10);
+    const elBirthNumber = document.querySelector("input[name=birthNumber]");
+
+    if (elBirthNumber) {
+      elBirthNumber.addEventListener("click", (e) => {
+        if (elBirthNumber.value == "") e.target.setSelectionRange(0, 10);
       });
+    }
   } catch (error) {
     console.error(error);
   }
+}
+
+function addTips() {
+  const elIDLabel = document.querySelector("label[for=identificationNumber]");
+  if (elIDLabel) {
+    const elIDLabelTip = document.createElement("small");
+    elIDLabelTip.textContent = " (bez lomítka, kratšie nedopĺňať nulami)";
+    elIDLabel.appendChild(elIDLabelTip);
+  }
+  const elFormTips = document.createElement("div");
+  elFormTips.className = "pom-nve-tips";
+  elFormTips.innerHTML = `Tipy od <i>[Lepší očkovací formulár]</i>
+   <ul> 
+  <li>Existuje stránka na <a href="https://www.old.korona.gov.sk/covid-19-validate-patient.php">Úpravu/overenie požiadavky (zrušenie/preobjednanie termínu na testovanie/očkovanie)</a></li>
+  <li>Vyplňte si formulár skôr, obnovte stránku a vyskúšajte či sa vám všetko správne doplní</li>
+  <li>Ukladanie funguje aj na testovací formulár</li>
+  </ul>`;
+  elPatientForm.append(elFormTips);
 }
 
 function init() {
@@ -313,6 +333,7 @@ function init() {
   addLoadButtons();
   loadForms();
   birthNumberAutoSelect();
+  addTips();
 }
 
 init();
