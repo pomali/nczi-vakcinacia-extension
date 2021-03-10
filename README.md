@@ -59,4 +59,4 @@ https://twitter.com/_pomali
 
 # Refresh button
 
-Aktualizácia údajov na pozadi by Slavoj SANTA Hruška
+Aktualizácia údajov na pozadí by Slavoj SANTA Hruška
