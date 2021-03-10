@@ -56,3 +56,7 @@ web-ext build -i "README.md" -i "screenshots" --source-dir ./nczi-vakcinacia-ext
 # Talk to me
 
 https://twitter.com/_pomali
+
+# Refresh button
+
+Aktualizácia údajov na pozadi by Slavoj SANTA Hruška
