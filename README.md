@@ -31,6 +31,7 @@ Zdrojový kód: https://github.com/pomali/nczi-vakcinacia-extension
 - Save & Load forms on old.korona.gov.sk (v0.1+)
 - Autofills "calendar" search from url fragment (hash) (v0.2+)
 - Better labels and some tips
+- Button to refresh only calendar (v0.3+)
 
 # Why?
 

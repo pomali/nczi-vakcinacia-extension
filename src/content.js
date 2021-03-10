@@ -328,22 +328,20 @@ function addTips() {
 }
 
 function hookToAngular() {
-  console.log("%cWhat's my context? \uD83D\uDE07", "color: green; font-size:15px;");
   var s = document.createElement('script');
   s.type = 'text/javascript';
   var hacik = `
-    console.log("%cAnd WhoAmI now? \uD83D\uDE08", "color: red; font-size:15px;");
+    console.log("%cangularHook", "color: red; font-size:15px;");
     var angular_scope = angular.element(document.getElementById('vacc_calendar')).scope();
     function doAppRefresh(){
-      console.log("%cDoing devils work \uD83D\uDE08", "color: red; font-size:15px;");
+      console.log("Running refresh");
       // let app to forget previouse errors
       angular_scope.form_data.error_while_loading_vacc=0;
       // get new appointments and refresh form status
       angular_scope.getDriveinsVacc();
     }
     // add button in angular context
-    $('h2').first().after('<button type="button" id="refreshBurton" class="btn btn-success" style="font-size: 14px;" onclick="doAppRefresh();" ng-class="btn-success"><span>\uD83D\uDE08 Aktualizovať termíny</span></button>');
-    console.log("%cHooks in place \uD83D\uDE08", "color: red; font-size:15px;");
+    $('h2').first().after('<button type="button" id="refreshBurton" class="btn pom-nve-btn-secondary" style="font-size: 14px;" onclick="doAppRefresh();" ng-class="btn-success">${logoSvg}<span> Aktualizovať termíny <i class="fas fa-sync-alt"></i></span></button>');
   `;
   try {
     s.appendChild(document.createTextNode(hacik));
