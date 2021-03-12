@@ -1,7 +1,7 @@
 {
   "manifest_version": 2,
   "name": "Lepšia očkovacia registrácia",
-  "version": "0.3",
+  "version": "0.3.1",
   "description": "Vylepšenie korona.gov.sk (NCZI) očkovacieho formuláru. Pridáva ukladanie vyplneného formuláru.",
   "author": "pom",
 
