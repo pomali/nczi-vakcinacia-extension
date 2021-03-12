@@ -30,19 +30,29 @@ function valueIsSameOrFirstEmpty(formArr1, formArr2, ngModelKey) {
 }
 
 function fnSavedIsMatching(formArr) {
-  return (existingFormArr) =>
-    valueIsSameOrFirstEmpty(existingFormArr, formArr, "form_data.first_name") &&
-    valueIsSameOrFirstEmpty(existingFormArr, formArr, "form_data.last_name") &&
+  return (existingFormArr) => {
     (valueIsSameOrFirstEmpty(
       existingFormArr,
       formArr,
-      "form_data.birth_number"
-    ) ||
+      "form_data.first_name"
+    ) &&
       valueIsSameOrFirstEmpty(
         existingFormArr,
         formArr,
-        "form_data.personal_id"
-      ));
+        "form_data.last_name"
+      ) &&
+      valueIsSameOrFirstEmpty(
+        existingFormArr,
+        formArr,
+        "form_data.without_bn"
+      ) &&
+      getValueByNgModel(existingFormArr, "form_data.birth_number") ==
+        getValueByNgModel(formArr, "form_data.birth_number") &&
+      getValueByNgModel(existingFormArr, "form_data.birth_number") !== "") ||
+      (getValueByNgModel(existingFormArr, "form_data.personal_id") ==
+        getValueByNgModel(formArr, "form_data.personal_id") &&
+        getValueByNgModel(existingFormArr, "form_data.personal_id") !== "");
+  };
 }
 
 function saveForm(e) {
@@ -216,7 +226,10 @@ function nameOfForm(f) {
   return `${getValueByNgModel(f, "form_data.first_name")} ${getValueByNgModel(
     f,
     "form_data.last_name"
-  )} (${getValueByNgModel(f, "form_data.birth_number")})`;
+  )} (${
+    getValueByNgModel(f, "form_data.birth_number") ||
+    "pid:" + getValueByNgModel(f, "form_data.personal_id")
+  })`;
 }
 
 function addLoadButtons() {
@@ -328,8 +341,8 @@ function addTips() {
 }
 
 function hookToAngular() {
-  var s = document.createElement('script');
-  s.type = 'text/javascript';
+  var s = document.createElement("script");
+  s.type = "text/javascript";
   var hacik = `
     console.log("%cangularHook", "color: red; font-size:15px;");
     var angular_scope = angular.element(document.getElementById('vacc_calendar')).scope();
@@ -346,7 +359,6 @@ function hookToAngular() {
   try {
     s.appendChild(document.createTextNode(hacik));
     document.body.appendChild(s);
-
   } catch (e) {
     s.text = code;
     document.body.appendChild(s);
