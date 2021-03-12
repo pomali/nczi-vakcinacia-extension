@@ -10,9 +10,9 @@
 
 # Published browser extensions
 
-- <a href="https://chrome.google.com/webstore/detail/lep%C5%A1ia-nczi-registr%C3%A1cia/fniphkhigniidpeeogcnmhgcnhfnajbo">🐶 Chrome</a>
-- <a href="https://addons.mozilla.org/en-US/developers/addon/lep%C5%A1ia-nczi-registr%C3%A1cia" >🦊 Firefox</a>
-- <!--🐠--> Edge in review
+- <a href="https://chrome.google.com/webstore/detail/lep%C5%A1ia-nczi-registr%C3%A1cia/fniphkhigniidpeeogcnmhgcnhfnajbo">🐶 Google Chrome</a>
+- <a href="https://addons.mozilla.org/en-US/developers/addon/lep%C5%A1ia-nczi-registr%C3%A1cia" >🦊 Mozilla Firefox</a>
+- <a href="https://microsoftedge.microsoft.com/addons/detail/lep%C5%A1ia-o%C4%8Dkovacia-registr%C3%A1/agmbbpgilciclhjhcnfbgooggahldlob">🐠 Microsoft Edge</a>
 
 # About extension / O rozšírení (sk)
 
