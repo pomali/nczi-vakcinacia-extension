@@ -1,0 +1,27 @@
+{
+  "name": "nczi-vakcinacia-extension",
+  "version": "1.0.0",
+  "description": "<p float=\"left\"> <img src=\"screenshots/www.old.korona.gov.sk_covid-19-vaccination-form.php(Laptop%20with%20MDPI%20screen)%20(1).png\" alt=\"Page with saved forms\" width=\"250\"/>",
+  "main": "mainfest.json",
+  "scripts": {
+    "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pomali/nczi-vakcinacia-extension.git"
+  },
+  "keywords": [
+    "chrome-extension",
+    "slovakia",
+    "firefox-addon"
+  ],
+  "author": "pom",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/pomali/nczi-vakcinacia-extension/issues"
+  },
+  "homepage": "https://github.com/pomali/nczi-vakcinacia-extension#readme",
+  "devDependencies": {
+    "jest": "^26.6.3"
+  }
+}
