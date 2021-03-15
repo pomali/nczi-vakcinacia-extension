@@ -1,10 +1,12 @@
 {
   "name": "nczi-vakcinacia-extension",
-  "version": "1.0.0",
+  "version": "0.3.2",
   "description": "<p float=\"left\"> <img src=\"screenshots/www.old.korona.gov.sk_covid-19-vaccination-form.php(Laptop%20with%20MDPI%20screen)%20(1).png\" alt=\"Page with saved forms\" width=\"250\"/>",
   "main": "mainfest.json",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "build": "web-ext build -i 'README.md' -i 'screenshots' -i 'stats' -i '**/*.test.js' -i '*.config.js' -i 'package*.json' --overwrite-dest --filename nczi-vakcinacia-extension-$npm_package_version.zip"
   },
   "repository": {
     "type": "git",

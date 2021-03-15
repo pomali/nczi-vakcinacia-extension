@@ -103,10 +103,33 @@ describe("hofIsMatching", () => {
   test.each(fnSavedIsMatchingTrue)(
     "is same person",
     (existingMultiArr, formArr) => {
-      const isMatchingSaved = contentScript.hofIsMatching(existingMultiArr)
-      expect(
-        isMatchingSaved(formArr)
-      ).toBeTruthy();
+      const isMatchingSaved = contentScript.hofIsMatching(existingMultiArr);
+      expect(isMatchingSaved(formArr)).toBeTruthy();
+    }
+  );
+  const fnSavedIsMatchingFalse = [
+    [
+      [
+        { "ng-model": "form_data.first_name", value: "Peter" },
+        { "ng-model": "form_data.last_name", value: "Sveter" },
+        { "ng-model": "form_data.without_bn", value: "" },
+        { "ng-model": "form_data.birth_number", value: "123123123" },
+        { "ng-model": "form_data.personal_id", value: "" },
+      ],
+      [
+        { "ng-model": "form_data.first_name", value: "Peter" },
+        { "ng-model": "form_data.last_name", value: "Nesveter" },
+        { "ng-model": "form_data.without_bn", value: "" },
+        { "ng-model": "form_data.birth_number", value: "123123123" },
+        { "ng-model": "form_data.personal_id", value: "" },
+      ],
+    ],
+  ];
+  test.each(fnSavedIsMatchingFalse)(
+    "is different person",
+    (existingMultiArr, formArr) => {
+      const isMatchingSaved = contentScript.hofIsMatching(existingMultiArr);
+      expect(isMatchingSaved(formArr)).toBeFalsy();
     }
   );
 });
