@@ -1,6 +1,6 @@
 {
   "name": "nczi-vakcinacia-extension",
-  "version": "0.3.2",
+  "version": "0.3.3",
   "description": "<p float=\"left\"> <img src=\"screenshots/www.old.korona.gov.sk_covid-19-vaccination-form.php(Laptop%20with%20MDPI%20screen)%20(1).png\" alt=\"Page with saved forms\" width=\"250\"/>",
   "main": "mainfest.json",
   "scripts": {
