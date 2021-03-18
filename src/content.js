@@ -286,7 +286,7 @@ function addLoadButtons() {
       <p>Vyplňte si formulár a na konci stlačte <b>Uložiť údaje o osobe</b>.</p>
       <p>Nabudúce si vyberiete uloženú osobu, vyberiete si termín a dole zaškrtnete, že nie ste robot.</p> ${disclaimer}`;
     }
-    elPatientForm.prepend(elFillIn);
+    if (elPatientForm) elPatientForm.prepend(elFillIn);
   });
 }
 
@@ -349,7 +349,7 @@ function addTips() {
   <li>Vyplňte si formulár skôr, obnovte stránku a vyskúšajte či sa vám všetko správne doplní</li>
   <li>Ukladanie funguje aj na testovací formulár</li>
   </ul>`;
-  elPatientForm.append(elFormTips);
+  if (elPatientForm) elPatientForm.append(elFormTips);
 }
 
 function hookToAngular() {
@@ -388,7 +388,9 @@ function init() {
 }
 init();
 
-// module.exports = {
-//   hofIsMatching,
-//   valueIsSameOrFirstEmpty,
-// };
+if (typeof module !== "undefined" && module.exports) {
+  module.exports = {
+    hofIsMatching,
+    valueIsSameOrFirstEmpty,
+  };
+}

@@ -1,7 +1,6 @@
 const { expect, test } = require("@jest/globals");
 
-Object.defineProperty(window, "chrome", {
-  writable: true,
+Object.defineProperty(global.self, "chrome", {
   value: {
     storage: {
       local: {
@@ -12,11 +11,20 @@ Object.defineProperty(window, "chrome", {
   },
 });
 
+Object.defineProperty(global.self, "angular", {
+  value: { element: jest.fn(() => ({ scope: jest.fn() })) },
+});
+
+Object.defineProperty(global.self, "$", {
+  value: jest.fn(() => ({ first: jest.fn(() => ({ after: jest.fn() })) })),
+});
+
 const contentScript = require("./content");
 
 describe("valueIsSameOrFirstEmpty", () => {
   const casesValueIsSameOrFirstEmptyMatching = [
     [[{}], [{ "ng-model": "a", value: 1 }], "a"],
+    [[{ "ng-model": "a", value: "" }], [{ "ng-model": "a", value: 1 }], "a"],
     [[{ "ng-model": "a", value: 1 }], [{ "ng-model": "a", value: 1 }], "a"],
     [
       [{ "ng-model": "a", value: 1 }],
