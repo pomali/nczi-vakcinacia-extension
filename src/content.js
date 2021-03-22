@@ -1,6 +1,4 @@
 "use strict";
-console.log("content.js");
-
 const storage =
   typeof browser === "undefined" ||
   Object.getPrototypeOf(browser) !== Object.prototype
@@ -12,7 +10,7 @@ const logoSvg = `<svg id="Capa_1" enable-background="new 0 0 512 512" height="0.
 
 function loadForms() {
   storage.get(function (result) {
-    console.log(result);
+    console.log(JSON.stringify(result));
   });
 }
 
@@ -22,9 +20,18 @@ function getInputs() {
   );
 }
 
+function getFieldByNgModel(formArr, ngModelKey) {
+  return formArr.find((x) => x["ng-model"] == ngModelKey);
+}
+
 function getValueByNgModel(formArr, ngModelKey) {
-  const found = formArr.find((x) => x["ng-model"] == ngModelKey);
+  const found = getFieldByNgModel(formArr, ngModelKey);
   return found ? found.value : found;
+}
+
+function getCheckedByNgModel(formArr, ngModelKey) {
+  const found = getFieldByNgModel(formArr, ngModelKey);
+  return found ? found.checked : found;
 }
 
 function valueIsSameOrFirstEmpty(formArr1, formArr2, ngModelKey) {
@@ -36,31 +43,53 @@ function valueIsSameOrFirstEmpty(formArr1, formArr2, ngModelKey) {
   );
 }
 
+function isMatchingBirthNumber(formArr1_required, formArr2_optional) {
+  return (
+    getValueByNgModel(formArr1_required, "form_data.birth_number") === "" ||
+    getValueByNgModel(formArr1_required, "form_data.birth_number") ===
+      undefined ||
+    (getValueByNgModel(formArr2_optional, "form_data.birth_number") != "" &&
+      getValueByNgModel(formArr2_optional, "form_data.birth_number") ==
+        getValueByNgModel(formArr1_required, "form_data.birth_number"))
+  );
+}
+
+function isMatchingPersonalId(formArr1_required, formArr2_optional) {
+  return (
+    getValueByNgModel(formArr2_optional, "form_data.personal_id") ==
+      getValueByNgModel(formArr1_required, "form_data.personal_id") &&
+    getValueByNgModel(formArr2_optional, "form_data.personal_id") !== "" &&
+    getValueByNgModel(formArr1_required, "form_data.personal_id") !== "" &&
+    getValueByNgModel(formArr1_required, "form_data.personal_id") !== undefined
+  );
+}
+
+function isMatchingTypeOfIdentifier(formArr1_required, formArr2_optional) {
+  return (
+    getCheckedByNgModel(formArr2_optional, "form_data.without_bn") ===
+      undefined ||
+    getCheckedByNgModel(formArr2_optional, "form_data.without_bn") ==
+      getCheckedByNgModel(formArr1_required, "form_data.without_bn")
+  );
+}
+
 function hofIsMatching(formArr1_required) {
   return (formArr2_optional) => {
     return (
-      (valueIsSameOrFirstEmpty(
+      valueIsSameOrFirstEmpty(
         formArr2_optional,
         formArr1_required,
         "form_data.first_name"
       ) &&
-        valueIsSameOrFirstEmpty(
-          formArr2_optional,
-          formArr1_required,
-          "form_data.last_name"
-        ) &&
-        valueIsSameOrFirstEmpty(
-          formArr2_optional,
-          formArr1_required,
-          "form_data.without_bn"
-        ) &&
-        getValueByNgModel(formArr2_optional, "form_data.birth_number") ==
-          getValueByNgModel(formArr1_required, "form_data.birth_number") &&
-        getValueByNgModel(formArr2_optional, "form_data.birth_number") !==
-          "") ||
-      (getValueByNgModel(formArr2_optional, "form_data.personal_id") ==
-        getValueByNgModel(formArr1_required, "form_data.personal_id") &&
-        getValueByNgModel(formArr2_optional, "form_data.personal_id") !== "")
+      valueIsSameOrFirstEmpty(
+        formArr2_optional,
+        formArr1_required,
+        "form_data.last_name"
+      ) &&
+      isMatchingTypeOfIdentifier(formArr1_required, formArr2_optional) &&
+      (getCheckedByNgModel(formArr1_required, "form_data.without_bn")
+        ? isMatchingPersonalId(formArr1_required, formArr2_optional)
+        : isMatchingBirthNumber(formArr1_required, formArr2_optional))
     );
   };
 }
@@ -188,6 +217,7 @@ function fnFillForm(formArray) {
     });
   };
 }
+
 function clearStorage(e) {
   e.preventDefault();
   const isDeleteConfirmed = confirm(
@@ -202,19 +232,20 @@ function clearStorage(e) {
   }
 }
 
-function fnRemoveData(savedData) {
+function fnRemoveData(existing) {
   return (e) => {
     e.preventDefault();
-    const isDeleteConfirmed = confirm(
-      `Mám vymazať 🗑 ${nameOfForm(savedData)}?\n     [Lepší očkovací formulár]`
-    );
-    if (isDeleteConfirmed) {
-      storage.get({ multiFormArr: [] }, function (result) {
-        let multiFormArr = result.multiFormArr;
-        const existing = multiFormArr.findIndex((x) =>
-          hofIsMatching(x)(savedData)
-        );
-        if (existing == -1) {
+    storage.get({ multiFormArr: [] }, function (result) {
+      let multiFormArr = result.multiFormArr;
+      const savedData = multiFormArr[existing];
+      const isDeleteConfirmed = confirm(
+        `Mám vymazať 🗑 ${nameOfForm(
+          savedData
+        )}?\n     [Lepší očkovací formulár]`
+      );
+
+      if (isDeleteConfirmed) {
+        if (!savedData) {
           alert(
             "Neviem vymazať neexistujúce údaje\n     [Lepší očkovací formulár]"
           );
@@ -229,8 +260,8 @@ function fnRemoveData(savedData) {
             );
           });
         }
-      });
-    }
+      }
+    });
   };
 }
 
@@ -239,8 +270,9 @@ function nameOfForm(f) {
     f,
     "form_data.last_name"
   )} (${
-    getValueByNgModel(f, "form_data.birth_number") ||
-    "pid:" + getValueByNgModel(f, "form_data.personal_id")
+    getCheckedByNgModel(f, "form_data.without_bn")
+      ? "pid:" + getValueByNgModel(f, "form_data.personal_id" || "_")
+      : getValueByNgModel(f, "form_data.birth_number") || "_"
   })`;
 }
 
@@ -254,7 +286,7 @@ function addLoadButtons() {
     <p>Po stlačení tlačidla s menom osoby sa vyplní formulár tak ako bol naposledy uložený. Potom si vyberte termín, zakliknite že nie ste robot a odošlite. Alebo ručne vyplňte inú osobu.</p>${disclaimer}`;
     const elFillInInner = document.createElement("div");
     elFillInInner.className = "pom-nve-div-fillInner";
-    for (const f of result.multiFormArr) {
+    for (const [i, f] of result.multiFormArr.entries()) {
       if (f) {
         empty = false;
         const elBtnWrap = document.createElement("div");
@@ -262,7 +294,7 @@ function addLoadButtons() {
         const btnRemove = document.createElement("button");
         btnRemove.innerHTML = `<i class="far fa-trash-alt"></i>`;
         btnRemove.className = "pom-nve-btn-remove";
-        btnRemove.addEventListener("click", fnRemoveData(f));
+        btnRemove.addEventListener("click", fnRemoveData(i));
         const btn = document.createElement("button");
         btn.className = "btn pom-nve-btn-primary";
         btn.textContent = nameOfForm(f);
@@ -356,10 +388,8 @@ function hookToAngular() {
   var s = document.createElement("script");
   s.type = "text/javascript";
   var hacik = `
-    console.log("%cangularHook", "color: red; font-size:15px;");
     var angular_scope = angular.element(document.getElementById('vacc_calendar')).scope();
     function doAppRefresh(){
-      console.log("Running refresh");
       // let app to forget previouse errors
       angular_scope.form_data.error_while_loading_vacc=0;
       // get new appointments and refresh form status
@@ -392,5 +422,10 @@ if (typeof module !== "undefined" && module.exports) {
   module.exports = {
     hofIsMatching,
     valueIsSameOrFirstEmpty,
+    isMatchingBirthNumber,
+    isMatchingPersonalId,
+    isMatchingTypeOfIdentifier,
+    getValueByNgModel,
+    getCheckedByNgModel,
   };
 }
