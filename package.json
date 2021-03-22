@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/pomali/nczi-vakcinacia-extension#readme",
   "devDependencies": {
-    "jest": "^26.6.3"
+    "jest": "^26.6.3",
+    "web-ext": "^6.0.0"
   }
 }
