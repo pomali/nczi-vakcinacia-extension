@@ -6,7 +6,7 @@
   "scripts": {
     "test": "jest",
     "test:watch": "jest --watch",
-    "build": "web-ext build -i 'README.md' -i 'screenshots' -i 'stats' -i '**/*.test.js' -i '*.config.js' -i 'package*.json' --overwrite-dest --filename nczi-vakcinacia-extension-$npm_package_version.zip"
+    "build": "web-ext build -i 'README.md' -i 'screenshots' -i 'stats' -i 'coverage' -i '**/*.test.js' -i '*.config.js' -i 'package*.json' --overwrite-dest --filename nczi-vakcinacia-extension-$npm_package_version.zip"
   },
   "repository": {
     "type": "git",
